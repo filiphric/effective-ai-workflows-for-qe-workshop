@@ -154,6 +154,81 @@ if ! command -v npm &>/dev/null; then
 fi
 success "npm v$(npm -v) found"
 
+# ── Check: claude code ───────────────────────────────────────────
+if command -v claude &>/dev/null; then
+  CLAUDE_VERSION=$(claude --version 2>/dev/null || echo "unknown")
+  success "Claude Code found ($CLAUDE_VERSION)"
+else
+  warn "Claude Code is not installed"
+  printf "  Claude Code is required for this workshop.\n"
+  printf "\n"
+  printf "  ${BOLD}Install Claude Code now? (Y/n)${RESET} "
+  read -r INSTALL_CLAUDE
+  if [[ ! "$INSTALL_CLAUDE" =~ ^[Nn]$ ]]; then
+    if [ "$PLATFORM" = "windows" ]; then
+      info "On Windows, the recommended install method is PowerShell:"
+      printf "    ${DIM}irm https://claude.ai/install.ps1 | iex${RESET}\n"
+      printf "\n"
+      printf "  Alternatively, you can use WinGet:\n"
+      printf "    ${DIM}winget install Anthropic.ClaudeCode${RESET}\n"
+      printf "\n"
+      warn "Please run one of the commands above in a separate terminal, then continue."
+    else
+      info "Installing Claude Code..."
+      if curl -fsSL https://claude.ai/install.sh | bash 2>&1; then
+        success "Claude Code installed"
+      else
+        error "Claude Code installation failed"
+        printf "\n"
+        printf "  You can install manually:\n"
+        printf "    ${DIM}curl -fsSL https://claude.ai/install.sh | bash${RESET}\n"
+        printf "\n"
+        printf "  Or with Homebrew (macOS):\n"
+        printf "    ${DIM}brew install --cask claude-code${RESET}\n"
+        printf "\n"
+      fi
+    fi
+  else
+    printf "\n"
+    printf "  You can install it later:\n"
+    case "$PLATFORM" in
+      macos|linux)
+        printf "    ${DIM}curl -fsSL https://claude.ai/install.sh | bash${RESET}\n" ;;
+      windows)
+        printf "    ${DIM}irm https://claude.ai/install.ps1 | iex${RESET}  (PowerShell)\n"
+        printf "    ${DIM}winget install Anthropic.ClaudeCode${RESET}\n" ;;
+    esac
+    printf "\n"
+  fi
+fi
+
+# ── Check: cursor ────────────────────────────────────────────────
+CURSOR_FOUND=false
+if command -v cursor &>/dev/null; then
+  CURSOR_FOUND=true
+elif [ "$PLATFORM" = "macos" ] && [ -d "/Applications/Cursor.app" ]; then
+  CURSOR_FOUND=true
+elif [ "$PLATFORM" = "windows" ] && command -v cmd.exe &>/dev/null; then
+  # Check common Windows install locations via cmd
+  cmd.exe /C "where cursor" &>/dev/null && CURSOR_FOUND=true
+  if [ "$CURSOR_FOUND" = false ]; then
+    LOCALAPPDATA_WIN=$(cmd.exe /C "echo %LOCALAPPDATA%" 2>/dev/null | tr -d '\r')
+    LOCALAPPDATA_UNIX=$(echo "$LOCALAPPDATA_WIN" | sed 's|\\|/|g; s|^\([A-Za-z]\):|/\L\1|')
+    [ -f "$LOCALAPPDATA_UNIX/Programs/cursor/Cursor.exe" ] && CURSOR_FOUND=true
+  fi
+elif [ "$PLATFORM" = "linux" ]; then
+  [ -f "/usr/share/applications/cursor.desktop" ] || [ -f "$HOME/.local/share/applications/cursor.desktop" ] && CURSOR_FOUND=true
+fi
+
+if [ "$CURSOR_FOUND" = true ]; then
+  success "Cursor found"
+else
+  warn "Cursor is not installed"
+  printf "  Cursor is the recommended IDE for this workshop.\n"
+  printf "  Download it from: ${DIM}https://cursor.com/download${RESET}\n"
+  printf "\n"
+fi
+
 # ── Check: network connectivity ──────────────────────────────────
 printf "\n"
 info "Checking network connectivity..."
