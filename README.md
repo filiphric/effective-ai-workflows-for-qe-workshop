@@ -43,7 +43,7 @@ After setup, navigate to the project folder and run:
 
 ```bash
 cd effective-ai-workflows-for-qe-workshop
-bash scripts/setup.sh start
+npx workshop start
 ```
 
 The app runs at **http://localhost:3000** with the API on **http://localhost:3001**.
@@ -68,13 +68,13 @@ The workshop is split into chapters. Each chapter is a git branch that builds on
 To jump to a chapter, run:
 
 ```bash
-npm run chapter <number>
+npx workshop chapter <number>
 ```
 
 For example, to start chapter 3:
 
 ```bash
-npm run chapter 3
+npx workshop chapter 3
 ```
 
 This will automatically stash any uncommitted changes and switch to the correct branch. Each chapter branch contains the completed state of all previous chapters, so you can jump in at any point.
@@ -85,11 +85,12 @@ Use the setup script throughout the workshop:
 
 | Command | What it does |
 |---|---|
-| `bash scripts/setup.sh` | Full setup + interactive menu |
-| `bash scripts/setup.sh start` | Start the application |
-| `bash scripts/setup.sh reset` | Reset the database to a clean state |
-| `bash scripts/setup.sh check` | Check if ports 3000 & 3001 are free |
-| `bash scripts/setup.sh verify` | Verify that everything is set up correctly |
+| `npx workshop setup` | Full setup + interactive menu |
+| `npx workshop start` | Start the application |
+| `npx workshop reset` | Reset the database to a clean state |
+| `npx workshop check` | Check if ports 3000 & 3001 are free |
+| `npx workshop verify` | Verify that everything is set up correctly |
+| `npx workshop chapter <n>` | Switch to a chapter branch |
 
 ## Troubleshooting
 
@@ -100,10 +101,10 @@ Upgrade to v20+. Using `nvm`: `nvm install 20 && nvm use 20`. On Windows: downlo
 Your corporate network may be blocking `github.com` or `registry.npmjs.org`. Ask IT to allowlist these domains, or try from a personal network.
 
 **Port 3000 or 3001 is already in use**
-Run `bash scripts/setup.sh check` to see what's using the ports. The script can kill the conflicting processes for you, or you can stop them manually.
+Run `npx workshop check` to see what's using the ports. The script can kill the conflicting processes for you, or you can stop them manually.
 
 **npm install fails**
-Delete `trelloapp/node_modules` and run `bash scripts/setup.sh` again. Behind a proxy? Configure npm: `npm config set proxy http://your-proxy:port`.
+Delete `trelloapp/node_modules` and run `npx workshop setup` again. Behind a proxy? Configure npm: `npm config set proxy http://your-proxy:port`.
 
 **Still stuck?**
 Reach out to the workshop instructor — we'll get you sorted before the session.
