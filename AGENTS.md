@@ -1,0 +1,6 @@
+# Effective AI workflows for QE - Workshop
+
+This repository contains workshop materials for the Effective AI workflows for QE workshop. The workshop is split into chapters and contains an application that the participants will test. The application is a clone of Trello, a project management tool.
+
+# setup.sh
+This script serves as the entry point for the workshop. It will take care of the installation, check dependencies, and start the application.

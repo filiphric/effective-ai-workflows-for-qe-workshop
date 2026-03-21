@@ -1,0 +1,13 @@
+{
+  "name": "effective-ai-workflows-for-qe-workshop",
+  "version": "1.0.0",
+  "description": "A hands-on workshop on writing effective tests using AI-powered workflows.",
+  "main": "index.js",
+  "scripts": {
+    "start": "bash setup.sh"
+  },
+  "keywords": ["workshop", "ai", "qa", "testing"],
+  "author": "Filip Hric",
+  "license": "ISC",
+  "type": "commonjs"
+}
