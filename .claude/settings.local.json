@@ -6,7 +6,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(bash scripts/setup.sh verify)",
-      "Bash(bash scripts/chapter.sh)"
+      "Bash(bash scripts/chapter.sh)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)",
+      "Bash(gh release:*)"
     ]
   }
 }

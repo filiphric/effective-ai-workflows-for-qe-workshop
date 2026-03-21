@@ -47,6 +47,7 @@ for i in "${!BRANCHES[@]}"; do
   git checkout "$CURRENT" --quiet
 
   if git rebase "$PARENT" --quiet 2>/dev/null; then
+    git push --force-with-lease --quiet
     printf "${GREEN}ok${RESET}\n"
   else
     printf "${RED}conflict!${RESET}\n"
