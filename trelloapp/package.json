@@ -4,6 +4,7 @@
   "scripts": {
     "start": "vite",
     "lint": "prettier --write \"src/**/*.{ts,tsx,js}\" && eslint \"**/*.{ts,tsx,js}\" --fix",
+    "test": "npx playwright test",
     "typecheck": "tsc --noEmit -p . ",
     "postinstall": "echo \"Trello app was installed sucessfully\nYou can now run it by typing:\nnpm start\""
   },
@@ -42,6 +43,7 @@
     "zustand": "^4.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/leaflet": "^1.7.11",
     "@types/node": "^25.5.0",
     "@vitejs/plugin-react": "^5.1.4",
