@@ -48,6 +48,37 @@ bash setup.sh start
 
 The app runs at **http://localhost:3000** with the API on **http://localhost:3001**.
 
+## Workshop chapters
+
+The workshop is split into chapters. Each chapter is a git branch that builds on the previous one.
+
+| # | Chapter | Branch | What you'll learn |
+|---|---------|--------|-------------------|
+| 1 | Cursor Basics | `chapter/01-cursor-basics` | Navigate Cursor IDE, write your first AI-assisted tests |
+| 2 | Prompting Basics | `chapter/02-prompting-basics` | Craft effective prompts for test generation |
+| 3 | Rules | `chapter/03-rules` | Configure project rules to guide AI behavior |
+| 4 | Skills | `chapter/04-skills` | Create reusable AI skills and commands |
+| 5 | Context Engineering | `chapter/05-context-engineering` | Optimize context with docs, examples, and references |
+| 6 | Workflow Building | `chapter/06-workflow-building` | Build end-to-end testing workflows |
+| 7 | Running Agents | `chapter/07-running-agents` | Run AI agents autonomously on test tasks |
+| 8 | Evaluations | `chapter/08-evaluations` | Evaluate and score AI-generated test quality |
+
+### Switching chapters
+
+To jump to a chapter, run:
+
+```bash
+npm run chapter <number>
+```
+
+For example, to start chapter 3:
+
+```bash
+npm run chapter 3
+```
+
+This will automatically stash any uncommitted changes and switch to the correct branch. Each chapter branch contains the completed state of all previous chapters, so you can jump in at any point.
+
 ## Script commands
 
 Use the setup script throughout the workshop:
