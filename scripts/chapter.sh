@@ -6,12 +6,18 @@ if [ -t 1 ] && [ "${TERM:-dumb}" != "dumb" ]; then
   RED='\033[0;31m'
   GREEN='\033[0;32m'
   YELLOW='\033[1;33m'
+  CYAN='\033[0;36m'
   BOLD='\033[1m'
   DIM='\033[2m'
   RESET='\033[0m'
 else
-  RED='' GREEN='' YELLOW='' BOLD='' DIM='' RESET=''
+  RED='' GREEN='' YELLOW='' CYAN='' BOLD='' DIM='' RESET=''
 fi
+
+# ── Check for workshop updates ──────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/check-update.sh"
+check_for_update
 
 CHAPTERS=(
   "01-cursor-basics"

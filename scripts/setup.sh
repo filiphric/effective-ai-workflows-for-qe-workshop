@@ -154,6 +154,11 @@ if ! command -v npm &>/dev/null; then
 fi
 success "npm v$(npm -v) found"
 
+# ── Check for workshop updates ──────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/check-update.sh"
+check_for_update
+
 # ── Check: claude code ───────────────────────────────────────────
 if command -v claude &>/dev/null; then
   CLAUDE_VERSION=$(claude --version 2>/dev/null || echo "unknown")
