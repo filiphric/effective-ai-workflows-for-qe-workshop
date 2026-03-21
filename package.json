@@ -4,7 +4,8 @@
   "description": "A hands-on workshop on writing effective tests using AI-powered workflows.",
   "main": "index.js",
   "scripts": {
-    "start": "bash setup.sh"
+    "start": "bash setup.sh",
+    "chapter": "bash chapter.sh"
   },
   "keywords": ["workshop", "ai", "qa", "testing"],
   "author": "Filip Hric",
