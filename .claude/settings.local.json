@@ -4,7 +4,9 @@
       "Bash(chmod:*)",
       "Bash(bash -n /Users/filiphric/effective-ai-workflows-for-qe-workshop/setup.sh)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(bash scripts/setup.sh verify)",
+      "Bash(bash scripts/chapter.sh)"
     ]
   }
 }

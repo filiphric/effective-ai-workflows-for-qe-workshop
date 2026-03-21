@@ -17,13 +17,13 @@ Run this command in your terminal:
 **macOS / Linux:**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/setup.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
 ```
 
 **Windows (Git Bash):**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/setup.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
 ```
 
 > Windows users: run this inside **Git Bash** (installed with [Git for Windows](https://git-scm.com/download/win)). PowerShell and CMD are not supported.
@@ -43,7 +43,7 @@ After setup, navigate to the project folder and run:
 
 ```bash
 cd effective-ai-workflows-for-qe-workshop
-bash setup.sh start
+bash scripts/setup.sh start
 ```
 
 The app runs at **http://localhost:3000** with the API on **http://localhost:3001**.
@@ -85,11 +85,11 @@ Use the setup script throughout the workshop:
 
 | Command | What it does |
 |---|---|
-| `bash setup.sh` | Full setup + interactive menu |
-| `bash setup.sh start` | Start the application |
-| `bash setup.sh reset` | Reset the database to a clean state |
-| `bash setup.sh check` | Check if ports 3000 & 3001 are free |
-| `bash setup.sh verify` | Verify that everything is set up correctly |
+| `bash scripts/setup.sh` | Full setup + interactive menu |
+| `bash scripts/setup.sh start` | Start the application |
+| `bash scripts/setup.sh reset` | Reset the database to a clean state |
+| `bash scripts/setup.sh check` | Check if ports 3000 & 3001 are free |
+| `bash scripts/setup.sh verify` | Verify that everything is set up correctly |
 
 ## Troubleshooting
 
@@ -100,10 +100,10 @@ Upgrade to v20+. Using `nvm`: `nvm install 20 && nvm use 20`. On Windows: downlo
 Your corporate network may be blocking `github.com` or `registry.npmjs.org`. Ask IT to allowlist these domains, or try from a personal network.
 
 **Port 3000 or 3001 is already in use**
-Run `bash setup.sh check` to see what's using the ports. The script can kill the conflicting processes for you, or you can stop them manually.
+Run `bash scripts/setup.sh check` to see what's using the ports. The script can kill the conflicting processes for you, or you can stop them manually.
 
 **npm install fails**
-Delete `trelloapp/node_modules` and run `bash setup.sh` again. Behind a proxy? Configure npm: `npm config set proxy http://your-proxy:port`.
+Delete `trelloapp/node_modules` and run `bash scripts/setup.sh` again. Behind a proxy? Configure npm: `npm config set proxy http://your-proxy:port`.
 
 **Still stuck?**
 Reach out to the workshop instructor — we'll get you sorted before the session.

@@ -26,14 +26,14 @@ CHAPTERS=(
 
 usage() {
   printf "\n"
-  printf "${BOLD}  Usage:${RESET} bash chapter.sh <number>\n"
+  printf "${BOLD}  Usage:${RESET} bash scripts/chapter.sh <number>\n"
   printf "\n"
   printf "  ${BOLD}Available chapters:${RESET}\n"
   for ch in "${CHAPTERS[@]}"; do
     printf "    ${DIM}%s${RESET}\n" "$ch"
   done
   printf "\n"
-  printf "  ${BOLD}Example:${RESET} bash chapter.sh 3\n"
+  printf "  ${BOLD}Example:${RESET} bash scripts/chapter.sh 3\n"
   printf "\n"
   exit 1
 }

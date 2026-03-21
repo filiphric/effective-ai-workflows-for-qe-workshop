@@ -282,9 +282,9 @@ fi
 
 WORKSHOP_DIR=""
 
-if [ -n "${BASH_SOURCE[0]:-}" ] && [ -d "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$APP_DIR" ]; then
-  # Running from inside the repo
-  WORKSHOP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -d "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/$APP_DIR" ]; then
+  # Running from inside the repo (script lives in scripts/ subdirectory)
+  WORKSHOP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 elif [ -d "./$APP_DIR" ]; then
   WORKSHOP_DIR="$(pwd)"
 else
