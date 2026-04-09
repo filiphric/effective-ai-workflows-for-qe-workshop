@@ -19,6 +19,15 @@ function Write-Success { param($msg) Write-Host "  [OK]  $msg" -ForegroundColor 
 function Write-Err     { param($msg) Write-Host "  X  $msg" -ForegroundColor Red }
 function Write-Warn    { param($msg) Write-Host "  !  $msg" -ForegroundColor Yellow }
 
+function Exit-Script {
+    param([int]$code = 0)
+    if ($code -ne 0) {
+        Write-Host ""
+        Read-Host "  Press Enter to close"
+    }
+    exit $code
+}
+
 function Show-NeedHelp {
     Write-Host ""
     Write-Host "  -- Need help? ------------------------------------------" -ForegroundColor Yellow
@@ -70,7 +79,7 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
     Write-Host "    winget install Git.Git"
     Write-Host "    or download from https://git-scm.com/download/win"
     Show-NeedHelp
-    exit 1
+    Exit-Script 1
 }
 Write-Success "git found"
 
@@ -82,7 +91,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
     Write-Host "    winget install OpenJS.NodeJS.LTS"
     Write-Host "    or download from https://nodejs.org"
     Show-NeedHelp
-    exit 1
+    Exit-Script 1
 }
 
 # ── Check: node version >= 20 ────────────────────────────────────
@@ -95,7 +104,7 @@ if ($nodeMajor -lt 20) {
     Write-Host "    winget install OpenJS.NodeJS.LTS"
     Write-Host "    or download from https://nodejs.org"
     Show-NeedHelp
-    exit 1
+    Exit-Script 1
 }
 Write-Success "Node.js v$nodeVer found"
 
@@ -104,7 +113,7 @@ if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
     Write-Err "npm is not installed"
     Write-Host "  npm usually comes with Node.js. Try reinstalling Node.js."
     Show-NeedHelp
-    exit 1
+    Exit-Script 1
 }
 $npmVer = npm -v
 Write-Success "npm v$npmVer found"
@@ -186,7 +195,7 @@ if (-not $networkOk) {
     $cont = Read-Host "  Continue anyway? (y/N)"
     if ($cont -notmatch '^[Yy]') {
         Show-NeedHelp
-        exit 1
+        Exit-Script 1
     }
 }
 
@@ -217,11 +226,11 @@ if (Test-Path (Join-Path $repoRoot $APP_DIR)) {
             $dirName = Read-Host "  Enter a different name"
             if ([string]::IsNullOrWhiteSpace($dirName)) {
                 Write-Err "No directory name provided"
-                exit 1
+                Exit-Script 1
             }
             if (Test-Path $dirName) {
                 Write-Err "Directory '$dirName' also exists. Please remove it and try again."
-                exit 1
+                Exit-Script 1
             }
         }
     }
@@ -234,7 +243,7 @@ if (Test-Path (Join-Path $repoRoot $APP_DIR)) {
         Write-Err "Failed to clone repository"
         Write-Host "  Check your internet connection and try again."
         Show-NeedHelp
-        exit 1
+        Exit-Script 1
     }
     Write-Success "Repository cloned into $dirName"
     $workshopDir = Join-Path (Get-Location) $dirName
@@ -244,7 +253,7 @@ $appPath = Join-Path $workshopDir $APP_DIR
 
 if (-not (Test-Path $appPath)) {
     Write-Err "Application directory '$APP_DIR' not found in $workshopDir"
-    exit 1
+    Exit-Script 1
 }
 Write-Success "Application directory found"
 
@@ -258,7 +267,7 @@ if ($npmProc.ExitCode -ne 0) {
     Write-Err "npm install failed"
     Write-Host "  Try running manually: cd $APP_DIR && npm install"
     Show-NeedHelp
-    exit 1
+    Exit-Script 1
 }
 Write-Success "Dependencies installed"
 
@@ -388,10 +397,10 @@ function Verify-Setup {
 
 # ── Parse command-line flags ─────────────────────────────────────
 switch ($Command) {
-    "start"  { Start-App;    exit 0 }
-    "reset"  { Reset-App;    exit 0 }
-    "check"  { Check-Ports;  exit 0 }
-    "verify" { Verify-Setup; exit 0 }
+    "start"  { Start-App;    Exit-Script 0 }
+    "reset"  { Reset-App;    Exit-Script 0 }
+    "check"  { Check-Ports;  Exit-Script 0 }
+    "verify" { Verify-Setup; Exit-Script 0 }
 }
 
 # ── Interactive menu loop ────────────────────────────────────────
@@ -419,7 +428,7 @@ while ($true) {
             Write-Host ""
             Write-Info "Happy testing!"
             Write-Host ""
-            exit 0
+            Exit-Script 0
         }
         default { Write-Warn "Invalid option -- please choose 1-5" }
     }
