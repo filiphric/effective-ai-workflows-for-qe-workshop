@@ -258,13 +258,8 @@ Write-Success "Application directory found"
 # ── Install dependencies ─────────────────────────────────────────
 Write-Host ""
 Write-Info "Installing application dependencies..."
-$npmOut = [System.IO.Path]::GetTempFileName()
-$npmErr = [System.IO.Path]::GetTempFileName()
-$npmProc = Start-Process npm -ArgumentList "install", "--prefix", $appPath, "--silent" -NoNewWindow -PassThru -RedirectStandardOutput $npmOut -RedirectStandardError $npmErr
-Show-Spinner $npmProc "Installing dependencies..."
-$npmProc.WaitForExit()
-Remove-Item $npmOut, $npmErr -ErrorAction SilentlyContinue
-if ($npmProc.ExitCode -ne 0) {
+& npm install --prefix $appPath --silent
+if ($LASTEXITCODE -ne 0) {
     Write-Err "npm install failed"
     Write-Host "  Try running manually: cd $APP_DIR && npm install"
     Show-NeedHelp
