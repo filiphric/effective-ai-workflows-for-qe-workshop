@@ -8,7 +8,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $REPO      = "https://github.com/filiphric/effective-ai-workflows-for-qe-workshop.git"
-$DEFAULT_DIR = "effective-ai-workshops-for-qe-workshop"
+$DEFAULT_DIR = "effective-ai-workflows-for-qe-workshop"
 $APP_DIR   = "trelloapp"
 $APP_PORT  = 3000
 $API_PORT  = 3001
@@ -192,8 +192,12 @@ if (-not $networkOk) {
 
 # ── Clone or locate the repository ───────────────────────────────
 $workshopDir = ""
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$repoRoot = Split-Path -Parent $scriptDir
+if ($PSCommandPath) {
+    $repoRoot = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
+} else {
+    # Running via irm | iex — no script file path available, use current directory
+    $repoRoot = Get-Location
+}
 
 if (Test-Path (Join-Path $repoRoot $APP_DIR)) {
     $workshopDir = $repoRoot

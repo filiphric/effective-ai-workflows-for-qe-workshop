@@ -9,7 +9,8 @@
       "Bash(bash scripts/chapter.sh)",
       "Bash(git tag:*)",
       "Bash(git push:*)",
-      "Bash(gh release:*)"
+      "Bash(gh release:*)",
+      "Bash(gh pr:*)"
     ]
   }
 }

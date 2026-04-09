@@ -4,3 +4,6 @@ This repository contains workshop materials for the Effective AI workflows for Q
 
 # setup.sh
 This script serves as the entry point for the workshop. It will take care of the installation, check dependencies, and start the application.
+
+# Repository URLs
+All setup scripts reference `github.com/filiphric/effective-ai-workflows-for-qe-workshop`. The Trello app (`trelloapp/`) intentionally uses a separate repo: `github.com/filiphric/trelloapp-workshop-app`.
