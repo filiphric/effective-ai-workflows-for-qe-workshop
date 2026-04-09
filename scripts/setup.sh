@@ -156,8 +156,10 @@ success "npm v$(npm -v) found"
 
 # ── Check for workshop updates ──────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/check-update.sh"
-check_for_update
+if [ -f "$SCRIPT_DIR/check-update.sh" ]; then
+  source "$SCRIPT_DIR/check-update.sh"
+  check_for_update
+fi
 
 # ── Check: claude code ───────────────────────────────────────────
 if command -v claude &>/dev/null; then
