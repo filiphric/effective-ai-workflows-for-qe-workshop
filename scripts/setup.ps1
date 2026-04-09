@@ -236,9 +236,12 @@ if (Test-Path (Join-Path $repoRoot $APP_DIR)) {
     }
 
     Write-Info "Cloning workshop repository..."
-    $cloneProc = Start-Process git -ArgumentList "clone", $REPO, $dirName -NoNewWindow -PassThru -RedirectStandardOutput "NUL" -RedirectStandardError "NUL"
+    $cloneOut = [System.IO.Path]::GetTempFileName()
+    $cloneErr = [System.IO.Path]::GetTempFileName()
+    $cloneProc = Start-Process git -ArgumentList "clone", $REPO, $dirName -NoNewWindow -PassThru -RedirectStandardOutput $cloneOut -RedirectStandardError $cloneErr
     Show-Spinner $cloneProc "Cloning repository..."
     $cloneProc.WaitForExit()
+    Remove-Item $cloneOut, $cloneErr -ErrorAction SilentlyContinue
     if ($cloneProc.ExitCode -ne 0) {
         Write-Err "Failed to clone repository"
         Write-Host "  Check your internet connection and try again."
@@ -260,9 +263,12 @@ Write-Success "Application directory found"
 # ── Install dependencies ─────────────────────────────────────────
 Write-Host ""
 Write-Info "Installing application dependencies..."
-$npmProc = Start-Process npm -ArgumentList "install", "--prefix", $appPath, "--silent" -NoNewWindow -PassThru -RedirectStandardOutput "NUL" -RedirectStandardError "NUL"
+$npmOut = [System.IO.Path]::GetTempFileName()
+$npmErr = [System.IO.Path]::GetTempFileName()
+$npmProc = Start-Process npm -ArgumentList "install", "--prefix", $appPath, "--silent" -NoNewWindow -PassThru -RedirectStandardOutput $npmOut -RedirectStandardError $npmErr
 Show-Spinner $npmProc "Installing dependencies..."
 $npmProc.WaitForExit()
+Remove-Item $npmOut, $npmErr -ErrorAction SilentlyContinue
 if ($npmProc.ExitCode -ne 0) {
     Write-Err "npm install failed"
     Write-Host "  Try running manually: cd $APP_DIR && npm install"
