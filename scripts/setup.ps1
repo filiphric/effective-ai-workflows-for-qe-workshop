@@ -236,21 +236,13 @@ if (Test-Path (Join-Path $repoRoot $APP_DIR)) {
     }
 
     Write-Info "Cloning workshop repository..."
-    $cloneOut = [System.IO.Path]::GetTempFileName()
-    $cloneErr = [System.IO.Path]::GetTempFileName()
-    $cloneProc = Start-Process git -ArgumentList "clone", $REPO, $dirName -NoNewWindow -PassThru -RedirectStandardOutput $cloneOut -RedirectStandardError $cloneErr
-    Show-Spinner $cloneProc "Cloning repository..."
-    $cloneProc.WaitForExit()
-    if ($cloneProc.ExitCode -ne 0) {
-        $cloneErrMsg = Get-Content $cloneErr -Raw -ErrorAction SilentlyContinue
-        Remove-Item $cloneOut, $cloneErr -ErrorAction SilentlyContinue
+    & git clone $REPO $dirName
+    if ($LASTEXITCODE -ne 0) {
         Write-Err "Failed to clone repository"
-        if ($cloneErrMsg) { Write-Host $cloneErrMsg }
         Write-Host "  Check your internet connection and try again."
         Show-NeedHelp
         Exit-Script 1
     }
-    Remove-Item $cloneOut, $cloneErr -ErrorAction SilentlyContinue
     Write-Success "Repository cloned into $dirName"
     $workshopDir = Join-Path (Get-Location) $dirName
 }
