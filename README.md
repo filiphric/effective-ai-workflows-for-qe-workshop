@@ -20,13 +20,13 @@ Run this command in your terminal:
 bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
 ```
 
-**Windows (PowerShell):**
+**Windows PowerShell (experimental):**
 
 ```powershell
 irm https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.ps1 | iex
 ```
 
-**Windows (Git Bash):**
+**Windows Git Bash:**
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
