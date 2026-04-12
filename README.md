@@ -20,13 +20,19 @@ Run this command in your terminal:
 bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
 ```
 
-**Windows (Git Bash):**
+**Windows PowerShell (experimental):**
+
+```powershell
+irm https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.ps1 | iex
+```
+
+**Windows Git Bash:**
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/filiphric/effective-ai-workflows-for-qe-workshop/main/scripts/setup.sh)
 ```
 
-> Windows users: run this inside **Git Bash** (installed with [Git for Windows](https://git-scm.com/download/win)). PowerShell and CMD are not supported.
+> Windows users running PowerShell: if script execution is blocked, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
 
 The installer will:
 1. Check that `git`, `node` (v20+), and `npm` are installed
