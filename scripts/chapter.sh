@@ -21,13 +21,13 @@ check_for_update
 
 CHAPTERS=(
   "01-cursor-basics"
-  "02-prompting-basics"
-  "03-rules"
-  "04-skills"
+  "02-claude-code"
+  "03-mcp"
+  "04-rules-and-skills"
   "05-context-engineering"
   "06-workflow-building"
-  "07-running-agents"
-  "08-evaluations"
+  "07-testing-skills"
+  "08-ai-reviews"
 )
 
 usage() {
@@ -44,24 +44,32 @@ usage() {
   exit 1
 }
 
-if [ -z "${1:-}" ]; then
-  usage
-fi
-
-NUM=$(printf "%02d" "$1" 2>/dev/null) || usage
-
-# Find matching chapter
 BRANCH=""
-for ch in "${CHAPTERS[@]}"; do
-  if [[ "$ch" == "$NUM"* ]]; then
-    BRANCH="chapter/$ch"
-    break
-  fi
-done
 
-if [ -z "$BRANCH" ]; then
-  printf "${RED}  Chapter %s not found.${RESET}\n" "$1"
-  usage
+if [ -z "${1:-}" ]; then
+  printf "\n"
+  printf "  ${BOLD}Select a chapter:${RESET}\n\n"
+  PS3="$(printf '  Enter number: ')"
+  select ch in "${CHAPTERS[@]}"; do
+    if [ -n "$ch" ]; then
+      BRANCH="chapter/$ch"
+      break
+    else
+      printf "  ${RED}Invalid selection, try again.${RESET}\n"
+    fi
+  done
+else
+  NUM=$(printf "%02d" "$1" 2>/dev/null) || usage
+  for ch in "${CHAPTERS[@]}"; do
+    if [[ "$ch" == "$NUM"* ]]; then
+      BRANCH="chapter/$ch"
+      break
+    fi
+  done
+  if [ -z "$BRANCH" ]; then
+    printf "${RED}  Chapter %s not found.${RESET}\n" "$1"
+    usage
+  fi
 fi
 
 # Stash any uncommitted changes

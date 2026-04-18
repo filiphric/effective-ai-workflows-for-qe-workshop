@@ -9,13 +9,13 @@ const isWindows = process.platform === 'win32';
 
 const CHAPTERS = [
   '01-cursor-basics',
-  '02-prompting-basics',
-  '03-rules',
-  '04-skills',
+  '02-claude-code',
+  '03-mcp',
+  '04-rules-and-skills',
   '05-context-engineering',
   '06-workflow-building',
-  '07-running-agents',
-  '08-evaluations',
+  '07-testing-skills',
+  '08-ai-reviews',
 ];
 
 const bashCommands = {
@@ -38,12 +38,15 @@ function usage() {
     verify          Verify setup
     chapter <n>     Switch to a chapter branch
 
+  Available chapters:
+${CHAPTERS.map(ch => `    ${ch}`).join('\n')}
+
   Examples:
     workshop setup
     workshop start
     workshop chapter 3
 `);
-  process.exit(1);
+  process.exit(0);
 }
 
 function chapterUsage() {
@@ -52,6 +55,29 @@ function chapterUsage() {
   CHAPTERS.forEach(ch => console.log(`    ${ch}`));
   console.log('\n  Example: workshop chapter 3\n');
   process.exit(1);
+}
+
+function promptChapterSelect() {
+  const readline = require('readline');
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+  console.log('\n  Available chapters:\n');
+  CHAPTERS.forEach((ch, i) => console.log(`    ${i + 1}. ${ch}`));
+  console.log('');
+
+  rl.question('  Select chapter: ', (answer) => {
+    rl.close();
+    const idx = parseInt(answer, 10) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= CHAPTERS.length) {
+      console.error('  Invalid selection.');
+      process.exit(1);
+    }
+    try {
+      runChapter(String(idx + 1));
+    } catch (err) {
+      process.exit(err.status || 1);
+    }
+  });
 }
 
 function runChapter(chapterArg) {
@@ -83,12 +109,16 @@ function runChapter(chapterArg) {
 if (!command) usage();
 
 if (command === 'chapter') {
-  try {
-    runChapter(args[1]);
-  } catch (err) {
-    process.exit(err.status || 1);
+  if (!args[1]) {
+    promptChapterSelect();
+  } else {
+    try {
+      runChapter(args[1]);
+    } catch (err) {
+      process.exit(err.status || 1);
+    }
+    process.exit(0);
   }
-  process.exit(0);
 }
 
 if (!bashCommands[command]) usage();
