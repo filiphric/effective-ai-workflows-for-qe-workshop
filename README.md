@@ -62,12 +62,12 @@ The workshop is split into chapters. Each chapter is a git branch that builds on
 |---|---------|--------|-------------------|
 | 1 | Cursor Basics | `chapter/01-cursor-basics` | Navigate Cursor IDE, write your first AI-assisted tests |
 | 2 | Claude Code | `chapter/02-claude-code` | Craft effective prompts for test generation |
-| 3 | Rules | `chapter/03-rules` | Configure project rules to guide AI behavior |
-| 4 | Skills | `chapter/04-skills` | Create reusable AI skills and commands |
+| 3 | MCP | `chapter/03-mcp` | Connect AI to external tools via Model Context Protocol |
+| 4 | Rules and Skills | `chapter/04-rules-and-skills` | Configure project rules and create reusable AI skills |
 | 5 | Context Engineering | `chapter/05-context-engineering` | Optimize context with docs, examples, and references |
 | 6 | Workflow Building | `chapter/06-workflow-building` | Build end-to-end testing workflows |
-| 7 | Running Agents | `chapter/07-running-agents` | Run AI agents autonomously on test tasks |
-| 8 | Evaluations | `chapter/08-evaluations` | Evaluate and score AI-generated test quality |
+| 7 | Testing skills | `chapter/07-testing-skills` | Create and apply AI-powered testing skills |
+| 8 | AI reviews | `chapter/08-ai-reviews` | Use AI to review and improve test quality |
 
 ### Switching chapters
 
