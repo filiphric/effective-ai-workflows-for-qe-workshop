@@ -11,7 +11,7 @@ layout: default
 # What you’ll learn
 
 - What is Cursor?
-- How to use agent, tab and inline edits functionality
+- How to use chat, tab completion and inline edits functionality
 - Tips on how to use Cursor for test automation
 
 ---
@@ -26,8 +26,8 @@ layout: default
 - MCP support
 
 <!--
-- compared to chatgpt or claude - it brings AI to where you need it, right into your IDE
-- it was originally forked from VS Code, which makes migration super-easy, it feels familiar, while providing a great user experience
+- compared to chatgpt or gemini - it brings AI to where you need it, right into your IDE
+- it was originally forked from VS Code, which makes migration super-easy, it feels familiar, while providing a great user experience (no longer the case for v3)
 - it is context aware 
   - if you are editing a file, it undeerstands the logic of that file
   - you can work with multiple files at once or evene the whole codebase
@@ -83,12 +83,12 @@ test('create a new list', async ({ page }) => {
 });
 ```
 
-## Part #3 - Show agent
-- The agent is at the core of the Cursor experience. This is where you talk to AI and explain your goals.
+## Part #3 - Show chat
+- The chat is at the core of the Cursor experience. This is where you talk to AI and explain your goals.
 
 - You can think of it as ChatGPT but integrated into your IDE. The big advantage of that is that in contrast to ChatGPT, Cursor can understand the context of the code you are writing.
 
-- we can add context to the agent, like the file we want to reference
+- we can add context to the chat, like the file we want to reference
 
 > Prompt: add a third test to add a card
 

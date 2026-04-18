@@ -136,10 +136,10 @@ layout: default
 | --- | --- | --- |
 | Intro | 0:00 - 0:15 | --- |
 | #1 - Cursor Basics | 0:15 - 0:35 | 0:35 - 0:55 |
-| #2 - Prompting Basics | 0:55 - 1:15 | 1:15 - 1:35 |
+| #2 - Claude Code | 0:55 - 1:15 | 1:15 - 1:35 |
 | Short break | 1:35 - 1:50 | --- |
-| #3 - Rules | 1:50 - 2:10 | 2:10 - 2:30 |
-| #4 - Skills | 2:30 - 2:50 | 2:50 - 3:10 |
+| #3 - MCP | 1:50 - 2:10 | 2:10 - 2:30 |
+| #4 - Rules and Skills | 2:30 - 2:50 | 2:50 - 3:10 |
 
 ---
 layout: default
@@ -155,8 +155,8 @@ layout: default
 | #5 - Context Engineering | 0:15 - 0:35 | 0:35 - 0:55 |
 | #6 - Workflow Building | 0:55 - 1:15 | 1:15 - 1:35 |
 | Short break | 1:35 - 1:50 | --- |
-| #7 - Running Agents | 1:50 - 2:10 | 2:10 - 2:30 |
-| #8 - Evaluations | 2:30 - 2:50 | 2:50 - 3:10 |
+| #7 - Testing skills | 1:50 - 2:10 | 2:10 - 2:30 |
+| #8 - AI reviews | 2:30 - 2:50 | 2:50 - 3:10 |
 
 ---
 layout: cover

@@ -61,7 +61,7 @@ The workshop is split into chapters. Each chapter is a git branch that builds on
 | # | Chapter | Branch | What you'll learn |
 |---|---------|--------|-------------------|
 | 1 | Cursor Basics | `chapter/01-cursor-basics` | Navigate Cursor IDE, write your first AI-assisted tests |
-| 2 | Prompting Basics | `chapter/02-prompting-basics` | Craft effective prompts for test generation |
+| 2 | Claude Code | `chapter/02-claude-code` | Craft effective prompts for test generation |
 | 3 | Rules | `chapter/03-rules` | Configure project rules to guide AI behavior |
 | 4 | Skills | `chapter/04-skills` | Create reusable AI skills and commands |
 | 5 | Context Engineering | `chapter/05-context-engineering` | Optimize context with docs, examples, and references |

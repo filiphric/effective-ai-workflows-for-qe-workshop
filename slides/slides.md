@@ -21,7 +21,7 @@ src: ./pages/challenge.md
 ---
 
 ---
-src: ./pages/02_prompting_basics.md
+src: ./pages/02_claude_code.md
 ---
 
 ---
