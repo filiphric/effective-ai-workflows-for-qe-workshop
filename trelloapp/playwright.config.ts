@@ -1,11 +1,13 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  timeout: 5000,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  reporter: 'html',
+  retries: 0,
+  reporter: process.env.CI ? 'github' : 'list',
+  workers: process.env.CI ? 1 : 1,
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -15,4 +17,16 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
+  projects: [
+    { 
+      name: 'setup', 
+      testMatch: /.*\.setup\.ts/
+    },
+    {
+      name: 'challenge',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /.*\.spec\.ts/,
+      dependencies: ['setup'],
+    }
+  ]
 });
