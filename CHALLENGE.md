@@ -1,37 +1,37 @@
-# Chapter 1 Challenges — Cursor Basics
+# Chapter 2 Challenges — Claude Code
 
 ---
 
 ## ⭐ Level 1 — Repeat it
 
-**Tab completion**
-Open an existing test file. Start typing a new test and let Cursor's tab completion finish it. Accept at least 3 suggestions.
+**Test generation**
+Ask Claude Code to look at a component that has no test yet and write a Playwright test for it.
 
-**Chat: add a test**
-Use the chat to add a test for creating a new list. Reference the relevant component files as context.
+**Debugging**
+Break a test by changing a `data-testid` to something wrong. Run the test, then give Claude Code the error output and ask it to find and fix the cause.
 
-**Inline edit**
-Select two or more tests and use inline edit to refactor them into a single test using test steps.
+**Refactoring**
+Ask Claude Code to refactor your existing tests to use a Page Object for the board page.
 
 ---
 
 ## ⭐⭐ Level 2 — Variation
 
-**Tab completion**
-Rename a `getByTestId` locator across multiple tests. Change the first occurrence manually and use tab completion to propagate the change.
+**Test generation**
+Ask Claude Code to look at an existing test and generate additional edge case tests it thinks are missing — without you specifying what those cases are.
 
-**Chat: add a test**
-Use the chat to write a test that deletes a card. Reference the relevant component to understand the interaction flow.
+**Debugging**
+Introduce a race condition by removing a `waitFor` or `expect`. Ask Claude Code to diagnose why the test is flaky and fix it properly.
 
-**Inline edit**
-Select a test and use inline edit to add a `test.beforeEach` hook that navigates to the board before each test.
+**Coverage gap analysis**
+Ask Claude Code to compare your test files against your components and produce a short report of untested interactions, then generate tests for two of them.
 
 ---
 
 ## ⭐⭐⭐ Level 3 — Go further
 
-**Chat: fix a broken test**
-Manually introduce a bug into one of your tests — wrong selector, missing step, or broken assertion. Then use only the Cursor chat to diagnose and fix it, referencing the component and the Playwright error output as context. Do not edit the test directly yourself.
+**CLAUDE.md**
+Look up what a `CLAUDE.md` file does in Claude Code. Create one for this project that instructs Claude Code on your preferred test patterns, selector strategy, and file naming conventions. Verify it influences the output of a new test generation task.
 
-**Inline edit: add error handling**
-Pick a test that creates a new card. Use inline edit to add an assertion that verifies what happens when you attempt to submit the card form with an empty title — without looking at the component source first. Then reference the component (`CardCreateInput.tsx`) and use inline edit again to correct any assumptions you got wrong.
+**Headless CI run**
+Find out how to run Claude Code non-interactively (without the chat loop). Write a shell script or `package.json` script that runs Claude Code in one-shot mode to generate a test for a given component, then immediately runs Playwright to verify the result.
