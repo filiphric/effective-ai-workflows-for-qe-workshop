@@ -11,6 +11,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    testIdAttribute: 'data-test-id',
   },
   webServer: {
     command: 'npm start',
