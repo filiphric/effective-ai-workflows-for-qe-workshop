@@ -1,6 +1,7 @@
 ---
 name: Update branches
 description: Workflows related to updating branches
+allowed-tools: git
 ---
 
 There are two tasks:
