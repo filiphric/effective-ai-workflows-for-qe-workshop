@@ -1,38 +1,30 @@
-# Chapter 1: Cursor Basics — Workshop Notes
+# Chapter 2: Claude Code
 
-## What is Cursor?
-- AI-powered code editor built on VS Code
-- Context-aware: understands your files, imports, and codebase
-- Customizable: pick your model, set behavior rules, add tooling
-- Supports MCP (Model Context Protocol) for extended capabilities
+## What is Claude Code?
+A terminal-based AI coding agent. Unlike Cursor, it operates autonomously across your whole repo — reading files, running commands, and iterating without you steering every step.
 
----
+## Cursor vs. Claude Code
+- **Cursor** — GUI, inline suggestions, best for focused in-editor edits
+- **Claude Code** — CLI, agentic, best for whole-project tasks like test generation, migrations, and CI automation
+- They're complementary. Use both. Claude Code also runs inside the Cursor terminal.
 
-## Core Features
+## Playwright automation patterns covered in demo
+- **Plan mode** — start here; Claude lays out every step before touching any files
+- **Test generation** from component source — reads your actual code, picks up `data-testid` attributes, iterates on failures automatically
+- **Debugging** — paste failing test output, Claude finds the root cause, fixes it, and reruns
+- **Permissions** — Claude asks before running commands; approve once and it's saved to `.claude/settings.json`
+- **`/rewind`** — if an agent run goes sideways, roll back the code and conversation to any earlier turn
+- **Screenshot-to-tests** — attach a browser screenshot; Claude maps visible interactions to selectors from the component source
+- **CLI piping** — pipe test output directly into Claude: `npx playwright test | claude -p "debug this test"`
 
-### Tab Completion
-- Autocomplete suggestions based on current file context
-- Works best when there's existing code to pattern-match against
-- Also handles **refactoring** — e.g. fix a locator in one place, Tab propagates the change elsewhere
+## Key commands
+| Command | What it does |
+|---|---|
+| `/permissions` | Allowlist commands to skip approval prompts |
+| `/rewind` | Roll back code and conversation to an earlier turn |
+| `/compact` | Summarize a long session to free up context |
+| `/new` | Start a fresh session |
 
-### Chat
-- Like ChatGPT, but IDE-integrated with codebase awareness
-- Add context by referencing files (e.g. `@ComponentName.vue`)
-- AI follows patterns it sees in your existing tests
-- Reference source components to get accurate test logic — no need to fully understand the app internals
-
-### Inline Edits
-- Focus AI on a specific section of code
-- Best for: refactoring, understanding unfamiliar code, scoped edits
-- Example: select 3 tests → prompt to merge them into one with test steps
-
----
-
-## Tips
-- Set a keyboard shortcut to toggle tab completion on/off
-- Use ↑ arrow in chat to recall previous prompts
-- Always give the AI relevant file context for accurate output
-
-## Resources
-- [Cursor documentation](https://www.cursor.com/docs)
-- [Cursor learning center](https://cursor.com/learn)
+## Controlling autonomy
+- **Plan mode** (`Shift+Tab`) — Claude proposes a plan before acting. Good default, especially on unfamiliar codebases.
+- **`--dangerously-skip-permissions`** — no prompts, no guardrails. For headless CI only. If you're unsure whether you need it, you don't.
