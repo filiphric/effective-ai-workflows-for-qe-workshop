@@ -116,13 +116,13 @@ check_for_update() {
   # Update all chapter branches from remote
   local chapter_branches=(
     "chapter/01-cursor-basics"
-    "chapter/02-prompting-basics"
-    "chapter/03-rules"
-    "chapter/04-skills"
+    "chapter/02-claude-code"
+    "chapter/03-mcp"
+    "chapter/04-rules-and-skills"
     "chapter/05-context-engineering"
     "chapter/06-workflow-building"
-    "chapter/07-running-agents"
-    "chapter/08-evaluations"
+    "chapter/07-skills-evaluation"
+    "chapter/08-ai-code-governance"
   )
 
   printf "  ${DIM}Updating chapter branches...${RESET}\n"

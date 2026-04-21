@@ -26,8 +26,8 @@ CHAPTERS=(
   "04-rules-and-skills"
   "05-context-engineering"
   "06-workflow-building"
-  "07-testing-skills"
-  "08-ai-reviews"
+  "07-skills-evaluation"
+  "08-ai-code-governance"
 )
 
 usage() {

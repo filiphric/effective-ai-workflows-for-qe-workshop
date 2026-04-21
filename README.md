@@ -66,8 +66,8 @@ The workshop is split into chapters. Each chapter is a git branch that builds on
 | 4 | Rules and Skills | `chapter/04-rules-and-skills` | Configure project rules and create reusable AI skills |
 | 5 | Context Engineering | `chapter/05-context-engineering` | Optimize context with docs, examples, and references |
 | 6 | Workflow Building | `chapter/06-workflow-building` | Build end-to-end testing workflows |
-| 7 | Testing skills | `chapter/07-testing-skills` | Create and apply AI-powered testing skills |
-| 8 | AI reviews | `chapter/08-ai-reviews` | Use AI to review and improve test quality |
+| 7 | Skills evaluation | `chapter/07-skills-evaluation` | Test create and evaluate skills |
+| 8 | AI code governance | `chapter/08-ai-code-governance` | Use AI to review and improve test quality |
 
 ### Switching chapters
 
