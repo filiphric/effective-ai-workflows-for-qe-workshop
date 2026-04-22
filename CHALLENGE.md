@@ -1,58 +1,48 @@
-# Chapter #4: Skills — Challenge
+# Chapter 5 Challenge: Context Engineering
 
-## ⭐ Level 1 — Repeat it
+## ⭐ Level 1 — Repeat It
 
-Create the `summarize-failures` skill from the demo:
+**Explore the context window playground.**
 
-1. Create the skill file at `.agents/skills/summarize-failures/SKILL.md` with:
-   - A `name` and `description` field (the description does the triggering — make it precise)
-   - Instructions for summarising Playwright output: totals, per-failure breakdown, root cause grouping, next steps
+Visit the Claude Code context window explorer:
+👉 https://code.claude.com/docs/en/context-window#explore-the-context-window
 
-2. Add a supporting script at `.agents/skills/summarize-failures/scripts/get-results.sh`:
-   ```bash
-   #!/bin/bash
-   npx playwright test --reporter=json 2>/dev/null
-   ```
-   Reference it from your `SKILL.md` so Claude runs it automatically when no output is provided.
+Use the interactive playground to observe how different inputs contribute to the total context size:
 
-3. Verify it works — prompt your agent with just `"summarize my test failures"` without pasting any output. Claude should call the script and produce the summary on its own.
+- Add a user message — how many tokens does it cost?
+- Enable a tool — what does that add?
+- Attach a file — how does size vary with content length?
+
+**Goal:** build an intuition for what fills the context window and how quickly it adds up in a real agent session.
 
 ---
 
 ## ⭐⭐ Level 2 — Variations
 
-**Build a different skill**
-Create a new skill that solves a different Playwright pain point. Some ideas:
-- `generate-selectors` — given a URL or a component, suggest robust `data-testid`-based selectors
-- `flaky-test-detector` — analyse a test file and flag patterns known to cause flakiness (hard waits, missing `await`, time-dependent assertions)
-- `test-coverage-report` — compare spec files against source components and list untested interactions
+**Audit a real conversation's context usage.**
 
-Make sure the `description` field is specific enough that the agent only loads the skill when it's genuinely relevant — not on every prompt.
+Pick a previous conversation from either **Cursor** or **Claude Code** where you asked an agent to help with something non-trivial.
 
-**Install a skill from the registry**
-Browse [skills.sh](https://skills.sh) and install one skill that looks useful for your workflow:
-```bash
-npx skills add <owner/repo>
-```
-Open the installed `SKILL.md`, read through its structure, and note what makes a well-written community skill. Try it out with a prompt that matches its description.
+- In **Claude Code**: run `/context` to inspect what's currently loaded
+- In **Cursor**: check the context indicator in the chat panel
+
+Look at what made it into the context:
+- How many tokens were used?
+- What files, tools, or history were included?
+- Were there things in context that weren't relevant to the task?
+
+**Goal:** move from theory to observation — see exactly how a real session consumes context, and spot opportunities to have kept it leaner.
 
 ---
 
-## ⭐⭐⭐ Level 3 — Go further
+## ⭐⭐⭐ Level 3 — Go Further
 
-**Exploratory testing with playwright-cli**
-Install the Microsoft playwright-cli skill if you haven't already:
-```bash
-npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli
-```
+**Build a context window progress bar using `/statusline`.**
 
-Use it to run a full exploratory session against the app:
-- Navigate to the board view
-- Find all interactive elements on the page
-- Interact with at least two of them (e.g. create a list, rename a card)
-- Take a screenshot at each meaningful step
+Claude Code lets you customise the status line shown in your terminal via the `/statusline` command.
 
-Once the session is complete, prompt Claude to generate a Playwright `.spec.ts` file based on everything it just explored — without you writing a single line of code.
+Your challenge: use it to display a **live progress bar** for your context window usage — so you can see at a glance how close you are to the limit while working.
 
-**Close the loop**
-Run the generated spec with `npx playwright test`. If it fails, paste the error back into the agent and ask it to fix it — using only the context it already has from the exploratory session. Document how many iterations it took to get a green run.
+Research the `/statusline` command in the Claude Code docs, figure out what data is available, and build something that gives you a useful at-a-glance signal before you drift out of the smart zone.
+
+**Goal:** turn context awareness from a manual check into a passive, always-visible indicator in your workflow.

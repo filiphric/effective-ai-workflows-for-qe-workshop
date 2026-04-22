@@ -1,61 +1,51 @@
-# Chapter 4: Skills
+# Chapter 5: Context Engineering
 
-## What are skills?
+## Prompt Engineering vs. Context Engineering
 
-A skill is a folder containing a `SKILL.md` file, placed inside `.agents/skills/`. Unlike rules (which always apply), skills are loaded on demand — Claude reads the `description` field to decide when a skill is relevant and loads it only when needed.
+Prompt engineering is about the *words* you use — techniques like role prompting, chain-of-thought, or the classic "Act as a...". Despite its popularity, these linguistic patterns have limited real impact. Research has shown that telling an LLM it's a genius doesn't actually make it one.
 
-```
-.agents/skills/
-└── my-skill/
-    └── SKILL.md
-```
+Context engineering is a fundamentally different concept, not an evolution of prompt engineering. Where prompt engineering is about phrasing, **context engineering is about information architecture** — what the model knows when it starts working. It's a more useful mental model for anyone working seriously with AI agents.
 
-## Anatomy of a skill
+## The Context Window
 
-A `SKILL.md` file has two key parts:
+The context window is everything an LLM can "see" at once. Think of it like RAM — there's a hard limit, and everything active must fit inside it. The context window contains:
 
-- **Frontmatter** — `name` and `description` fields. The description does all the triggering work: make it precise and specific so Claude loads the skill at the right moment.
-- **Body** — prose instructions telling Claude exactly what to do when the skill is active.
+- Your messages and the agent's responses
+- Files and tools it's been given
+- Any injected memory or instructions
 
-## Adding supporting scripts
+## LLMs Are Stateless
 
-For mechanical, reliable operations (running a command, parsing output), add a `scripts/` folder alongside `SKILL.md` and reference the scripts from the skill body. The script does the mechanical work; the skill does the reasoning.
+LLMs have no memory between turns. Every time you send a message, the entire conversation history is sent along with it. The model isn't remembering — it's re-reading the full thread each time and completing the next part. This means **longer conversations = more tokens = more to process**.
 
-```
-my-skill/
-├── SKILL.md
-└── scripts/
-    └── get-results.sh
-```
+## The Long Context Problem
 
-## The skills registry — skills.sh
+Larger context windows (some models advertise 1M+ tokens) don't automatically mean better performance. "Needle in a haystack" benchmarks — where a specific piece of information is hidden inside a long document — consistently show performance degradation as context grows. More context means more noise the model has to work through.
 
-[skills.sh](https://skills.sh) is an open community registry for AI skills — think npm, but for agent skills. Skills are organized by `owner/repo` and work across agents (Claude Code, Cursor, Copilot, Cline, Windsurf, and more).
+## The Smart Zone
 
-```bash
-# Install a skill from the registry
-npx skills add microsoft/playwright-cli
+There's a region of conversation length where models perform best: short enough to hold everything in mind, make good connections, understand the task clearly, and stay on track. This is the **smart zone**.
 
-# Install a specific skill from a repo
-npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli
-```
+- Short context → better connections, fewer mistakes, clearer intent
+- Long context → drift, confusion, missed details
 
-Once installed, the skill folder lands in `.agents/skills/` and Claude picks it up immediately. Anthropic also publishes skills on the registry — `frontend-design`, `pptx`, `docx`, and `pdf` are all in the top 100.
+The goal when working with any AI agent (Cursor, Claude Code, ChatGPT) is to keep it in the smart zone. Pay attention to how long a conversation has been running.
 
-## The playwright-cli skill
+## Staying in the Smart Zone
 
-The `microsoft/playwright-cli` skill (~23k installs) gives Claude a CLI to control a real browser step by step — this is distinct from running `.spec.ts` files. Key commands:
+Concrete tactics for maintaining performance:
 
-```
-playwright-cli open https://your-app.com
-playwright-cli snapshot       # inspect the accessibility tree
-playwright-cli click e5
-playwright-cli fill e3 "user@example.com"
-playwright-cli screenshot
-```
+- **Start a new chat** when a task is complete — don't drag old context into new work
+- **Launch sub-agents** for parallel or isolated tasks, each with a clean context window
+- **Split work** into smaller, self-contained tasks
+- **Spec-driven development** — define a spec, hand it to the agent, let it work in its own context window
 
-### Why this matters for test automation
+The natural follow-on question: if you're always starting fresh, how does your agent know about your project? That's where instruction files come in — they carry project knowledge across sessions without bloating the conversation history.
 
-The skill turns Claude into an **exploratory testing agent**. You can prompt it in natural language ("find all forms on this page and check they have proper validation") and Claude will navigate, interact, and report — without writing a single line of code.
+## Key Takeaways
 
-Crucially, once Claude has explored an app with `playwright-cli`, it can generate the actual Playwright spec from what it just did, closing the loop between exploration and test authoring.
+- Prompt engineering is about words; **context engineering is about information**
+- LLMs are stateless — every turn re-reads the whole history
+- Long contexts cause real performance degradation
+- Stay in the **smart zone**: shorter, focused conversations
+- Use instruction files to carry project knowledge across sessions
