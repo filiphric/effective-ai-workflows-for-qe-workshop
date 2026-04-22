@@ -10,8 +10,8 @@ const isWindows = process.platform === 'win32';
 const CHAPTERS = [
   '01-cursor-basics',
   '02-claude-code',
-  '03-mcp',
-  '04-rules-and-skills',
+  '03-rules',
+  '04-skills',
   '05-context-engineering',
   '06-workflow-building',
   '07-skills-evaluation',
