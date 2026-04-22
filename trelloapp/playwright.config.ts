@@ -10,7 +10,6 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 1,
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
     testIdAttribute: 'data-test-id',
   },
   webServer: {
