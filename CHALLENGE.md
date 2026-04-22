@@ -1,40 +1,50 @@
-# Chapter 2 Challenges — Claude Code
-
----
+# Chapter #3: Rules — Challenge
 
 ## ⭐ Level 1 — Repeat it
 
-**Test generation**
-Ask Claude Code to look at a component that has no test yet and write a Playwright test for it. Start in plan mode (`Shift+Tab`) so you can review the approach before any files are written.
+Create a project rule for your Playwright test suite:
 
-**Debugging**
-Break a test by changing a `data-testid` to something wrong (or repair your previous test if it failed). Run the test, then give Claude Code the error output and ask it to find and fix the cause.
-
-**Screenshot to tests**
-Take a browser screenshot of the board view. Attach it to Claude Code and ask it to write Playwright tests for the interactions visible on screen.
+1. Create a rule file at `.agents/rules/e2e/playwright.mdc` (or `.claude/rules/e2e/playwright.mdc` if using Claude Code)
+2. Set the rule type to **Auto Attached** with a glob pattern that targets spec files
+3. Include at least the following conventions in your rule:
+   - Selector strategy (use `data-testid`, avoid CSS classes and XPath)
+   - Timing strategy (no `waitForTimeout()`)
+4. Create a symlink so both Cursor and Claude Code share the same rules:
+   ```bash
+   ln -s ../../.agents/rules/ .claude/rules/
+   ```
+5. Prompt your AI agent to write a new test and verify the rule is being respected
 
 ---
 
-## ⭐⭐ Level 2 — Variation
+## ⭐⭐ Level 2 — Variations
 
-**Coverage gap analysis**
-Ask Claude Code to compare your test files against your components and produce a short report of untested interactions, then generate tests for two of them.
+Do all of the above, then extend your rules setup:
 
-**`/permissions`**
-Set up an allowlist so Claude Code can run `npx playwright test` without asking for approval each time. Check `.claude/settings.json` to confirm the permission was saved correctly.
+1. Create an `AGENTS.md` file in the root of your project. Include:
+   - A short project overview
+   - Commands to run and develop the app
+   - Test structure description
+   - Code style guidelines
+   
+   > 💡 Try generating a first draft with your AI agent, then trim and refine it — notice how much redundant or irrelevant content gets generated.
 
-**CLI piping**
-Run a failing test and pipe the output directly into Claude Code without copy-pasting:
-```bash
-npx playwright test tests/your-test.spec.ts --reporter=line | claude -p "debug this test"
-```
+2. Create a second rule file — this time with type **Agent Requested** — that covers something more situational (e.g. accessibility checks, API mocking conventions, or database reset behaviour)
+
+3. Prompt your agent with a task that should trigger each rule and confirm they are being applied correctly
 
 ---
 
 ## ⭐⭐⭐ Level 3 — Go further
 
-**Headless CI run**
-Find out how to run Claude Code non-interactively (without the chat loop). Write a shell script or `package.json` script that runs Claude Code in one-shot mode to generate a test for a given component, then immediately runs Playwright to verify the result.
+1. Set up a **User Rule** (in Cursor settings, or via `CLAUDE.local.md` / `~/.claude/CLAUDE.md`) that changes the agent's default communication style across all your projects (e.g. always respond concisely, always explain reasoning, always ask clarifying questions before writing code)
 
-**`--dangerously-skip-permissions` in a safe context**
-Create a throwaway branch. Write a script that runs Claude Code with `--dangerously-skip-permissions` to generate and run a full test suite with zero prompts. Document what permissions it needed and what you'd have to lock down before using this in a real CI pipeline.
+2. Explore the four rule types and create one of each:
+   - **Always** — a universal rule applied to every conversation
+   - **Auto Attached** — triggered by a glob pattern of your choice
+   - **Agent Requested** — an opt-in rule the agent pulls in based on context
+   - **Manual** — a rule you explicitly `@mention` when needed
+
+3. Intentionally break one of your rules (e.g. write a test using a CSS selector) and prompt the agent to review it. Does it catch the violation? If not, refine your rule until it does.
+
+4. Reflect: which rules feel like useful abstractions, and which feel like noise?
