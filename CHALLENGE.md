@@ -1,48 +1,54 @@
-# Chapter 5 Challenge: Context Engineering
+# Chapter 6 Challenge: Workflow Building
 
 ## ⭐ Level 1 — Repeat It
 
-**Explore the context window playground.**
+Recreate the `find-missing-testids` skill from the demo.
 
-Visit the Claude Code context window explorer:
-👉 https://code.claude.com/docs/en/context-window#explore-the-context-window
+1. Create the skill directory at `.claude/skills/find-missing-testids/`
+2. Write the `SKILL.md` with:
+   - `context: fork` and `agent: Explore` in the frontmatter
+   - Instructions to scan for interactive elements missing a `data-testid`
+   - Output format grouped by file with line numbers and suggested testid values
+3. Trigger the skill in Claude Code and confirm:
+   - The Explore subagent runs in isolation
+   - The main thread receives a clean, structured report
 
-Use the interactive playground to observe how different inputs contribute to the total context size:
-
-- Add a user message — how many tokens does it cost?
-- Enable a tool — what does that add?
-- Attach a file — how does size vary with content length?
-
-**Goal:** build an intuition for what fills the context window and how quickly it adds up in a real agent session.
+**You're done when:** the skill runs and returns a list of elements missing `data-testid` in your project.
 
 ---
 
 ## ⭐⭐ Level 2 — Variations
 
-**Audit a real conversation's context usage.**
+Create your own skill of choice
 
-Pick a previous conversation from either **Cursor** or **Claude Code** where you asked an agent to help with something non-trivial.
+### Suggestion: `find-hardcoded-waits`
 
-- In **Claude Code**: run `/context` to inspect what's currently loaded
-- In **Cursor**: check the context indicator in the chat panel
+Create a skill that scans the codebase for hardcoded waits that should be replaced with proper Playwright waiting strategies. The skill should:
+- Search for `page.waitForTimeout`, `setTimeout`, `sleep`, or any fixed numeric delays
+- Return results grouped by file with line numbers
+- For each match, suggest the appropriate Playwright alternative (e.g. `waitForSelector`, `waitForResponse`, `expect(locator).toBeVisible()`)
 
-Look at what made it into the context:
-- How many tokens were used?
-- What files, tools, or history were included?
-- Were there things in context that weren't relevant to the task?
-
-**Goal:** move from theory to observation — see exactly how a real session consumes context, and spot opportunities to have kept it leaner.
+Run it with `context: fork` and `agent: Explore`.
 
 ---
 
 ## ⭐⭐⭐ Level 3 — Go Further
 
-**Build a context window progress bar using `/statusline`.**
+Design and build a two-stage automated workflow that goes from app exploration to a working test file — with minimal manual input.
 
-Claude Code lets you customise the status line shown in your terminal via the `/statusline` command.
+### The workflow
 
-Your challenge: use it to display a **live progress bar** for your context window usage — so you can see at a glance how close you are to the limit while working.
+1. **Stage 1 — Explore:** Run the `playwright-explorer` sub-agent against the running app to produce an interaction report
+2. **Stage 2 — Generate:** Use the report from Stage 1 as context to generate a complete Playwright test file covering at least one full user flow
 
-Research the `/statusline` command in the Claude Code docs, figure out what data is available, and build something that gives you a useful at-a-glance signal before you drift out of the smart zone.
+### Requirements
 
-**Goal:** turn context awareness from a manual check into a passive, always-visible indicator in your workflow.
+- The sub-agent must use `browser_snapshot` (not screenshots) as its primary tool for element discovery — check the [Playwright MCP docs](https://github.com/microsoft/playwright-mcp) to understand why this produces better structured output
+- The generated test file must use `data-testid` locators where available and fall back to accessible role selectors where not
+- The test file must run without modification (`npx playwright test` passes)
+
+### Stretch goal
+
+Add a third stage: a second forked skill (`agent: Explore`) that reads the generated test file and checks it against the interaction report — flagging any flows that were documented but not covered by the generated tests. Return a coverage gap report.
+
+**You're done when:** the full pipeline runs, the test file executes cleanly, and (if you attempted the stretch goal) the coverage gap report is accurate.

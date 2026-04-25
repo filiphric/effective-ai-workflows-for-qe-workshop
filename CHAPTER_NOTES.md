@@ -1,51 +1,72 @@
-# Chapter 5: Context Engineering
+# Chapter 6: Workflow Building
 
-## Prompt Engineering vs. Context Engineering
+## What you'll learn
 
-Prompt engineering is about the *words* you use — techniques like role prompting, chain-of-thought, or the classic "Act as a...". Despite its popularity, these linguistic patterns have limited real impact. Research has shown that telling an LLM it's a genius doesn't actually make it one.
+- What workflows are and why they matter for test automation
+- How to build a skill that runs in a forked agent context
+- How to build a sub-agent
+- How sub-agents return findings back to the main thread
 
-Context engineering is a fundamentally different concept, not an evolution of prompt engineering. Where prompt engineering is about phrasing, **context engineering is about information architecture** — what the model knows when it starts working. It's a more useful mental model for anyone working seriously with AI agents.
+---
 
-## The Context Window
+## Skills with `context: fork`
 
-The context window is everything an LLM can "see" at once. Think of it like RAM — there's a hard limit, and everything active must fit inside it. The context window contains:
+Adding `context: fork` to a skill's YAML frontmatter runs it in an **isolated subagent** rather than inline in your main conversation. The skill content becomes the task prompt for that agent. When it finishes, it returns a clean summary to your main thread — not every individual tool call.
 
-- Your messages and the agent's responses
-- Files and tools it's been given
-- Any injected memory or instructions
+Use `agent: Explore` for read-only investigation tasks. The Explore agent is a built-in Claude Code agent that:
+- Uses Haiku (fast, cheap)
+- Has only Read, Glob, and Grep tools available
+- Cannot modify any files
 
-## LLMs Are Stateless
+Because the subagent starts with a **fresh context**, the SKILL.md must be self-contained — it needs to explain everything the agent needs to do its job without relying on any conversation history.
 
-LLMs have no memory between turns. Every time you send a message, the entire conversation history is sent along with it. The model isn't remembering — it's re-reading the full thread each time and completing the next part. This means **longer conversations = more tokens = more to process**.
+```yaml
+---
+name: find-missing-testids
+description: Scan the application for interactive elements missing a data-testid attribute
+context: fork
+agent: Explore
+---
+```
 
-## The Long Context Problem
+**Why it matters for test automation:** exploration-heavy tasks like auditing an entire codebase for missing `data-testid` attributes can generate a lot of tool call noise. Running them in a forked agent keeps your main thread clean and preserves your context budget for writing the actual tests.
 
-Larger context windows (some models advertise 1M+ tokens) don't automatically mean better performance. "Needle in a haystack" benchmarks — where a specific piece of information is hidden inside a long document — consistently show performance degradation as context grows. More context means more noise the model has to work through.
+---
 
-## The Smart Zone
+## Sub-agents with MCP
 
-There's a region of conversation length where models perform best: short enough to hold everything in mind, make good connections, understand the task clearly, and stay on track. This is the **smart zone**.
+Sub-agents are defined as markdown files with YAML frontmatter in `.agents/agents/`. The key feature: the `mcpServers` field scopes an MCP server **only to that agent**, not to your whole session.
 
-- Short context → better connections, fewer mistakes, clearer intent
-- Long context → drift, confusion, missed details
+This is particularly useful for browser automation with Playwright MCP:
+- The agent navigates, observes, and collects information in its own isolated context
+- Browser tool call logs, screenshots, and DOM snapshots don't flood your main thread
+- When done, the agent compresses everything into a structured report and returns it
+- Your main thread receives the report with its full context budget still intact
 
-The goal when working with any AI agent (Cursor, Claude Code, ChatGPT) is to keep it in the smart zone. Pay attention to how long a conversation has been running.
+```yaml
+---
+name: playwright-explorer
+description: Use a real browser to navigate the app and return a structured report for writing Playwright tests
+mcpServers:
+  - playwright:
+      type: stdio
+      command: npx
+      args: ["-y", "@playwright/mcp@latest"]
+---
+```
 
-## Staying in the Smart Zone
+Scoping Playwright MCP to a sub-agent also means browser tools aren't available in every conversation — they're heavy, encourage browsing instead of reasoning, and consume context quickly.
 
-Concrete tactics for maintaining performance:
+---
 
-- **Start a new chat** when a task is complete — don't drag old context into new work
-- **Launch sub-agents** for parallel or isolated tasks, each with a clean context window
-- **Split work** into smaller, self-contained tasks
-- **Spec-driven development** — define a spec, hand it to the agent, let it work in its own context window
+## Demo highlights
 
-The natural follow-on question: if you're always starting fresh, how does your agent know about your project? That's where instruction files come in — they carry project knowledge across sessions without bloating the conversation history.
+### `find-missing-testids` skill (forked Explore agent)
+- A skill that scans application source files for interactive elements (`button`, `input`, `select`, `textarea`, `a`, `onClick`, `onChange` handlers) missing a `data-testid` attribute
+- Returns a markdown list grouped by file, with line numbers, element types, and suggested testid values in kebab-case
+- All the scanning happens in the Explore agent's context — the main thread only receives the final report
 
-## Key Takeaways
-
-- Prompt engineering is about words; **context engineering is about information**
-- LLMs are stateless — every turn re-reads the whole history
-- Long contexts cause real performance degradation
-- Stay in the **smart zone**: shorter, focused conversations
-- Use instruction files to carry project knowledge across sessions
+### `playwright-explorer` sub-agent (Playwright MCP)
+- A sub-agent that launches a real browser, navigates the running application, and documents all pages, interactive elements, and multi-step flows
+- Returns a structured report (pages, element tables, flows discovered, missing `data-testid` flags) that the main thread can use directly to write Playwright tests
+- Demonstrates why scoping Playwright MCP to a sub-agent is preferable to connecting it globally
