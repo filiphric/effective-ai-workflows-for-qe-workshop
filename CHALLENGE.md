@@ -1,54 +1,51 @@
-# Chapter 6 Challenge: Workflow Building
+# Challenge — Skills Evaluation
 
-## ⭐ Level 1 — Repeat It
+## ⭐ Level 1 — Repeat it
 
-Recreate the `find-missing-testids` skill from the demo.
+Run Skill Creator on the `find-missing-testids` skill from Chapter 6 or your own skill.
 
-1. Create the skill directory at `.claude/skills/find-missing-testids/`
-2. Write the `SKILL.md` with:
-   - `context: fork` and `agent: Explore` in the frontmatter
-   - Instructions to scan for interactive elements missing a `data-testid`
-   - Output format grouped by file with line numbers and suggested testid values
-3. Trigger the skill in Claude Code and confirm:
-   - The Explore subagent runs in isolation
-   - The main thread receives a clean, structured report
+1. Install Skill Creator:
+   ```bash
+   npx skills add https://github.com/anthropics/skills --skill skill-creator
+   ```
+2. Open the trelloapp project and trigger Skill Creator:
+   > "Use Skill Creator to evaluate and improve my find-missing-testids skill"
+3. Follow the guided prompts — answer the clarifying questions about what the skill does and what good output looks like
+4. Review the issues it flags and inspect the generated eval test cases
+5. Open the HTML eval viewer and review the results
 
-**You're done when:** the skill runs and returns a list of elements missing `data-testid` in your project.
+**Goal:** Successfully complete the Skill Creator workflow end-to-end and identify at least one issue flagged in your skill.
 
 ---
 
 ## ⭐⭐ Level 2 — Variations
 
-Create your own skill of choice
+Add a custom eval test case and rerun the benchmark.
 
-### Suggestion: `find-hardcoded-waits`
+1. After the initial Skill Creator run, add a new test case manually to your eval set:
+   - **Input prompt:** *"Does the trelloapp have any elements missing testids?"* (a yes/no framed query, not an explicit audit request)
+   - **Assertions:** should still return a grouped markdown list; should not return a plain yes/no answer; should not hallucinate testids for elements that already have them
+2. Rerun the benchmark with your new test case included
+3. Compare the "With Skill" vs "Without Skill" scores for your new case
+4. If the skill underperforms on your new case, identify why — is it the description, the instructions, or the output format guidance?
 
-Create a skill that scans the codebase for hardcoded waits that should be replaced with proper Playwright waiting strategies. The skill should:
-- Search for `page.waitForTimeout`, `setTimeout`, `sleep`, or any fixed numeric delays
-- Return results grouped by file with line numbers
-- For each match, suggest the appropriate Playwright alternative (e.g. `waitForSelector`, `waitForResponse`, `expect(locator).toBeVisible()`)
-
-Run it with `context: fork` and `agent: Explore`.
+**Goal:** A new eval test case that reveals something about the skill's behaviour that the original cases didn't.
 
 ---
 
-## ⭐⭐⭐ Level 3 — Go Further
+## ⭐⭐⭐ Level 3 — Go further
 
-Design and build a two-stage automated workflow that goes from app exploration to a working test file — with minimal manual input.
+Run the description optimization loop and reflect on what it changes.
 
-### The workflow
+1. After the benchmark, trigger the description optimizer:
+   > "Run the description optimization loop for my find-missing-testids skill"
+2. Review the generated trigger / non-trigger queries in the HTML viewer
+3. Edit at least **3 queries** you disagree with — add context or correct the expected trigger outcome — then export
+4. Let the optimizer run for up to 5 rounds
+5. Compare the original description with the final one. Answer these questions in a short `EVAL_NOTES.md` file:
+   - What was wrong with the original description?
+   - What specific change did the optimizer make?
+   - The current description hardcodes `trelloapp` — is that a problem? How would you fix it?
+   - Would you have caught any of this without the tool?
 
-1. **Stage 1 — Explore:** Run the `playwright-explorer` sub-agent against the running app to produce an interaction report
-2. **Stage 2 — Generate:** Use the report from Stage 1 as context to generate a complete Playwright test file covering at least one full user flow
-
-### Requirements
-
-- The sub-agent must use `browser_snapshot` (not screenshots) as its primary tool for element discovery — check the [Playwright MCP docs](https://github.com/microsoft/playwright-mcp) to understand why this produces better structured output
-- The generated test file must use `data-testid` locators where available and fall back to accessible role selectors where not
-- The test file must run without modification (`npx playwright test` passes)
-
-### Stretch goal
-
-Add a third stage: a second forked skill (`agent: Explore`) that reads the generated test file and checks it against the interaction report — flagging any flows that were documented but not covered by the generated tests. Return a coverage gap report.
-
-**You're done when:** the full pipeline runs, the test file executes cleanly, and (if you attempted the stretch goal) the coverage gap report is accurate.
+**Goal:** A validated skill description and a written reflection that shows you understand *why* the description matters for triggering.

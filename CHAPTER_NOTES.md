@@ -1,72 +1,81 @@
-# Chapter 6: Workflow Building
+# Chapter 7 — Skills Evaluation
 
-## What you'll learn
+## The problem with skills
 
-- What workflows are and why they matter for test automation
-- How to build a skill that runs in a forked agent context
-- How to build a sub-agent
-- How sub-agents return findings back to the main thread
+Writing a `SKILL.md` is the easy part. Knowing whether it actually works is harder. How do you know it triggers when it should? How do you know an improved version is genuinely better, or that you haven't broken something that was working?
+
+Gut feeling is not a test. This is the same problem software engineering solved with tests and benchmarks — and Skill Creator v2 applies that same discipline to agent skills.
 
 ---
 
-## Skills with `context: fork`
+## What is Skill Creator v2?
 
-Adding `context: fork` to a skill's YAML frontmatter runs it in an **isolated subagent** rather than inline in your main conversation. The skill content becomes the task prompt for that agent. When it finishes, it returns a clean summary to your main thread — not every individual tool call.
+An installable agent skill from Anthropic, available at **skills.sh**. It guides you through the full skill development lifecycle:
 
-Use `agent: Explore` for read-only investigation tasks. The Explore agent is a built-in Claude Code agent that:
-- Uses Haiku (fast, cheap)
-- Has only Read, Glob, and Grep tools available
-- Cannot modify any files
+1. **Intent capture and drafting** — clarifying questions about what the skill should do and what good output looks like
+2. **Eval test case creation** — structured inputs paired with assertions
+3. **Parallel benchmark runs** — with skill vs. without skill, across all test cases simultaneously
+4. **Description optimization** — iterating the skill's description to improve trigger accuracy
 
-Because the subagent starts with a **fresh context**, the SKILL.md must be self-contained — it needs to explain everything the agent needs to do its job without relying on any conversation history.
-
-```yaml
 ---
-name: find-missing-testids
-description: Scan the application for interactive elements missing a data-testid attribute
-context: fork
-agent: Explore
+
+## What's inside
+
+Three built-in sub-agents handle the evaluation pipeline:
+
+| Sub-agent | Role |
+|---|---|
+| **Analyzer** | Examines benchmark results, explains *why* a skill won, suggests improvements |
+| **Comparator** | Blindly compares two outputs without knowing which produced them — avoids bias |
+| **Grader** | Scores each output against pre-defined assertions |
+
+Plus: eval scripts, a JSON schema, a Python benchmark runner, and an **HTML eval viewer** for side-by-side human review.
+
 ---
+
+## Installation
+
+```bash
+npx skills add https://github.com/anthropics/skills --skill skill-creator
 ```
 
-**Why it matters for test automation:** exploration-heavy tasks like auditing an entire codebase for missing `data-testid` attributes can generate a lot of tool call noise. Running them in a forked agent keeps your main thread clean and preserves your context budget for writing the actual tests.
+Choose your agent client target (`.agents/` for Cursor/Copilot). Symlink is recommended — a single source of truth that picks up updates automatically.
 
 ---
 
-## Sub-agents with MCP
+## How evals work
 
-Sub-agents are defined as markdown files with YAML frontmatter in `.agents/agents/`. The key feature: the `mcpServers` field scopes an MCP server **only to that agent**, not to your whole session.
+Each test case has:
+- An **input prompt** — the trigger query
+- **Assertions** — what the output must include or exclude
 
-This is particularly useful for browser automation with Playwright MCP:
-- The agent navigates, observes, and collects information in its own isolated context
-- Browser tool call logs, screenshots, and DOM snapshots don't flood your main thread
-- When done, the agent compresses everything into a structured report and returns it
-- Your main thread receives the report with its full context budget still intact
+The benchmark runs both variants in parallel. Results appear in the HTML eval viewer with pass/fail per assertion and an overall score per test case.
 
-```yaml
----
-name: playwright-explorer
-description: Use a real browser to navigate the app and return a structured report for writing Playwright tests
-mcpServers:
-  - playwright:
-      type: stdio
-      command: npx
-      args: ["-y", "@playwright/mcp@latest"]
----
-```
+Example results from evaluating `find-missing-testids`:
 
-Scoping Playwright MCP to a sub-agent also means browser tools aren't available in every conversation — they're heavy, encourage browsing instead of reasoning, and consume context quickly.
+| Eval | With Skill | Without Skill |
+|---|---|---|
+| Generic scan | 71% (5/7) | 100% (7/7) |
+| Test automation request | 100% (5/5) | 100% (5/5) |
+| Testability audit | 100% (5/5) | 100% (5/5) |
+
+A result like the Generic scan row — where the skill underperforms — is valuable information. It tells you the skill is over-constraining the model for that input type, or that the trigger condition is too broad. Evals surface this before it becomes a production problem.
 
 ---
 
-## Demo highlights
+## The description optimization loop
 
-### `find-missing-testids` skill (forked Explore agent)
-- A skill that scans application source files for interactive elements (`button`, `input`, `select`, `textarea`, `a`, `onClick`, `onChange` handlers) missing a `data-testid` attribute
-- Returns a markdown list grouped by file, with line numbers, element types, and suggested testid values in kebab-case
-- All the scanning happens in the Explore agent's context — the main thread only receives the final report
+The `description` field in a `SKILL.md` is what the agent uses to decide whether to invoke the skill. A vague or too-narrow description causes missed invocations — or false triggers.
 
-### `playwright-explorer` sub-agent (Playwright MCP)
-- A sub-agent that launches a real browser, navigates the running application, and documents all pages, interactive elements, and multi-step flows
-- Returns a structured report (pages, element tables, flows discovered, missing `data-testid` flags) that the main thread can use directly to write Playwright tests
-- Demonstrates why scoping Playwright MCP to a sub-agent is preferable to connecting it globally
+The optimization loop:
+1. Generates 20 trigger / non-trigger queries
+2. Displays them in the HTML viewer for human review and editing
+3. Iterates the description up to 5 rounds, measuring accuracy each round
+
+The result is a description that has been empirically validated, not just written by intuition.
+
+---
+
+## Key takeaway
+
+Skills are becoming part of your automation infrastructure. Apply the same rigour you apply to test code: baselines, assertions, regression checks. A benchmarked skill is a reliable part of your pipeline. An untested one is a one-off hack.
