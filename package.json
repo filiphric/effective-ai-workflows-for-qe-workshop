@@ -1,6 +1,6 @@
 {
   "name": "effective-ai-workflows-for-qe-workshop",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "A hands-on workshop on writing effective tests using AI-powered workflows.",
   "main": "index.js",
   "bin": {
