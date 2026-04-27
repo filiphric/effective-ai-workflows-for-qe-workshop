@@ -75,6 +75,11 @@ interface StoreState {
     discountEligible: boolean;
     discountAmount: number;
   };
+  settings: {
+    displayName: string;
+    currency: string;
+    emailNotifications: boolean;
+  };
   showTools: boolean;
   showSearch: boolean;
   searchResults: Card[];
@@ -158,6 +163,11 @@ export const useStore = create<StoreState>((set, get) => ({
     currency: 'USD',
     discountEligible: false,
     discountAmount: 0,
+  },
+  settings: {
+    displayName: '',
+    currency: 'USD',
+    emailNotifications: true,
   },
   showTools: false,
   showSearch: false,
