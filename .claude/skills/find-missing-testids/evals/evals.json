@@ -1,0 +1,97 @@
+{
+  "skill_name": "find-missing-testids",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Scan the trelloapp for interactive elements missing data-testid attributes",
+      "expected_output": "A markdown report grouped by file listing interactive elements (buttons, inputs, links, etc.) that are missing data-testid. Should NOT report elements that already have a data-testid (or data-test-id). Should include file path, line number, element type, and a suggested testid value. Should catch the Link components in Login.tsx and Signup.tsx that have no testid.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Does NOT report Login.tsx email input as missing testid (it has data-test-id='login-email')",
+          "type": "negative"
+        },
+        {
+          "text": "Does NOT report Login.tsx password input as missing testid (it has data-test-id='login-password')",
+          "type": "negative"
+        },
+        {
+          "text": "Does NOT report Login.tsx submit button as missing testid (it has data-test-id='login-submit')",
+          "type": "negative"
+        },
+        {
+          "text": "Identifies the Link component in Login.tsx (line ~50, the sign-up navigation link) as missing a testid",
+          "type": "positive"
+        },
+        {
+          "text": "Identifies the Link component in Signup.tsx (the login navigation link) as missing a testid",
+          "type": "positive"
+        },
+        {
+          "text": "Output is grouped by file with file paths as headers",
+          "type": "format"
+        },
+        {
+          "text": "Each finding includes line number, element type, and suggested testid in kebab-case",
+          "type": "format"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm setting up test automation for the trelloapp. Can you find all the buttons, inputs, and links that don't have a data-testid attribute so I know what needs to be updated?",
+      "expected_output": "A markdown report identifying interactive elements across the trelloapp that are missing data-testid attributes, with suggested testid values. Should correctly identify elements with data-test-id as already having testids and not flag them. The SaveButton in ListCreate.tsx (line ~64) which has no testid prop passed to it should be detected.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Does NOT report CardItem.tsx card div (data-test-id='card') as missing testid",
+          "type": "negative"
+        },
+        {
+          "text": "Does NOT report ListCreate.tsx add-list-input as missing (it has data-test-id='add-list-input')",
+          "type": "negative"
+        },
+        {
+          "text": "Detects the SaveButton usage in ListCreate.tsx that has no data-test-id prop passed",
+          "type": "positive"
+        },
+        {
+          "text": "Suggests kebab-case testid names for each missing element",
+          "type": "format"
+        },
+        {
+          "text": "Report is organized by file",
+          "type": "format"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Run a testability audit on the trelloapp — I need a list of all interactive elements that are missing data-testid attributes, with suggested testid names I can use",
+      "expected_output": "Comprehensive audit report covering the full trelloapp source. Key correctness: elements with data-test-id (not data-testid) should be recognized as having testids and not reported as missing. The report should give actionable suggested testid values.",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Does NOT falsely flag BoardCreate.tsx 'create-board' button as missing (has data-test-id='create-board')",
+          "type": "negative"
+        },
+        {
+          "text": "Does NOT falsely flag Signup.tsx email/password inputs as missing (they have data-test-id attributes)",
+          "type": "negative"
+        },
+        {
+          "text": "Identifies the Link in Login.tsx ('Don't have an account? Sign up here') as missing a testid",
+          "type": "positive"
+        },
+        {
+          "text": "Output includes at least 3 distinct files in the report",
+          "type": "positive"
+        },
+        {
+          "text": "All suggested testid names use kebab-case format",
+          "type": "format"
+        }
+      ]
+    }
+  ]
+}

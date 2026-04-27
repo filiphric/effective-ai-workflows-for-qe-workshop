@@ -1,51 +1,54 @@
-# Challenge — Skills Evaluation
+# Challenge — Code Governance
 
 ## ⭐ Level 1 — Repeat it
 
-Run Skill Creator on the `find-missing-testids` skill from Chapter 6 or your own skill.
+Set up Qodo on the workshop repo and trigger a review on a Playwright pull request.
 
-1. Install Skill Creator:
-   ```bash
-   npx skills add https://github.com/anthropics/skills --skill skill-creator
-   ```
-2. Open the trelloapp project and trigger Skill Creator:
-   > "Use Skill Creator to evaluate and improve my find-missing-testids skill"
-3. Follow the guided prompts — answer the clarifying questions about what the skill does and what good output looks like
-4. Review the issues it flags and inspect the generated eval test cases
-5. Open the HTML eval viewer and review the results
+1. Install the Qodo Git Plugin on your GitHub account: https://github.com/apps/qodo-gen
+2. Create a feature branch in the workshop repo with a new test file that contains at least **two deliberate issues** from this list:
+   - A `waitForTimeout` call
+   - A class-based or ID-based selector (e.g. `page.locator('.btn-primary')`)
+   - An assertion that only checks the URL (`toHaveURL`) with nothing else
+   - A `locator()` call where `getByRole` or `getByLabel` would apply
+3. Open a pull request from your branch into main
+4. Trigger a Qodo review by commenting `@qodo-gen review` on the PR (or wait for auto-review if configured)
+5. Screenshot or copy the review findings
 
-**Goal:** Successfully complete the Skill Creator workflow end-to-end and identify at least one issue flagged in your skill.
+**Goal:** Qodo identifies at least one of your deliberate issues and explains why it's a problem.
 
 ---
 
 ## ⭐⭐ Level 2 — Variations
 
-Add a custom eval test case and rerun the benchmark.
+Create a custom Playwright-specific rule in Qodo and verify it gets enforced on a new PR.
 
-1. After the initial Skill Creator run, add a new test case manually to your eval set:
-   - **Input prompt:** *"Does the trelloapp have any elements missing testids?"* (a yes/no framed query, not an explicit audit request)
-   - **Assertions:** should still return a grouped markdown list; should not return a plain yes/no answer; should not hallucinate testids for elements that already have them
-2. Rerun the benchmark with your new test case included
-3. Compare the "With Skill" vs "Without Skill" scores for your new case
-4. If the skill underperforms on your new case, identify why — is it the description, the instructions, or the output format guidance?
+1. Navigate to the Qodo rules portal and create a new rule based on one of these:
+   - **No raw waits** — flag any use of `waitForTimeout` and suggest a semantic alternative
+   - **Prefer role-based selectors** — flag `locator()` calls that use CSS selectors or IDs
+   - **Require content assertions** — flag tests that only use `toHaveURL` without a content-level assertion
+2. Write the rule description clearly — include what the violation looks like and what the fix should be
+3. Open a new PR that violates your rule
+4. Confirm Qodo surfaces a finding that references your rule specifically
 
-**Goal:** A new eval test case that reveals something about the skill's behaviour that the original cases didn't.
+**Goal:** A custom rule you wrote enforces itself automatically on a real PR.
 
 ---
 
 ## ⭐⭐⭐ Level 3 — Go further
 
-Run the description optimization loop and reflect on what it changes.
+Audit your existing Playwright test suite through Qodo and produce a governance report.
 
-1. After the benchmark, trigger the description optimizer:
-   > "Run the description optimization loop for my find-missing-testids skill"
-2. Review the generated trigger / non-trigger queries in the HTML viewer
-3. Edit at least **3 queries** you disagree with — add context or correct the expected trigger outcome — then export
-4. Let the optimizer run for up to 5 rounds
-5. Compare the original description with the final one. Answer these questions in a short `EVAL_NOTES.md` file:
-   - What was wrong with the original description?
-   - What specific change did the optimizer make?
-   - The current description hardcodes `trelloapp` — is that a problem? How would you fix it?
-   - Would you have caught any of this without the tool?
+1. If you have an existing Playwright test suite (from this workshop or your own project), open a PR that touches multiple test files
+2. Review Qodo's findings across the PR — group them by issue type:
+   - Flakiness risks
+   - Selector quality
+   - Assertion depth
+   - Convention violations
+3. Identify the **most common pattern** in the findings — this is a candidate for a standing rule
+4. Create that rule in Qodo
+5. Write a short governance report (`GOVERNANCE.md`) that includes:
+   - The top 3 issues found in your test suite
+   - The rule(s) you created to address them
+   - An estimate of how many PRs per week this would have caught, based on your team's current velocity
 
-**Goal:** A validated skill description and a written reflection that shows you understand *why* the description matters for triggering.
+**Goal:** A written governance report and at least one rule derived from real findings in your codebase.

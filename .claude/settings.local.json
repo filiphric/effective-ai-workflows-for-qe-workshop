@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/filiphric/effective-ai-workflows-for-qe-workshop/.claude/skills/find-missing-testids/evals)",
+      "Bash(mkdir -p /Users/filiphric/effective-ai-workflows-for-qe-workshop/find-missing-testids-workspace/iteration-1)",
+      "Bash(cp *)",
+      "Bash(python -m scripts.aggregate_benchmark /Users/filiphric/effective-ai-workflows-for-qe-workshop/find-missing-testids-workspace/iteration-1 --skill-name find-missing-testids)",
+      "Bash(nohup python *)",
+      "Bash(echo \"PID: $!\")"
+    ]
+  }
+}

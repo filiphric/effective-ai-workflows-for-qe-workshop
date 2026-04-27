@@ -1,81 +1,79 @@
-# Chapter 7 — Skills Evaluation
+# Chapter 8 — Code Governance
 
-## The problem with skills
+## The new problem
 
-Writing a `SKILL.md` is the easy part. Knowing whether it actually works is harder. How do you know it triggers when it should? How do you know an improved version is genuinely better, or that you haven't broken something that was working?
-
-Gut feeling is not a test. This is the same problem software engineering solved with tests and benchmarks — and Skill Creator v2 applies that same discipline to agent skills.
+AI coding tools increase velocity dramatically — but that velocity creates a review bottleneck. When developers write 3× the code, the same human review process can't keep up. In test automation this is especially costly: poorly written tests are often worse than no tests at all. They're flaky, they test implementation details, and they don't follow team conventions. AI will generate all of that if left unchecked.
 
 ---
 
-## What is Skill Creator v2?
+## What code governance means
 
-An installable agent skill from Anthropic, available at **skills.sh**. It guides you through the full skill development lifecycle:
-
-1. **Intent capture and drafting** — clarifying questions about what the skill should do and what good output looks like
-2. **Eval test case creation** — structured inputs paired with assertions
-3. **Parallel benchmark runs** — with skill vs. without skill, across all test cases simultaneously
-4. **Description optimization** — iterating the skill's description to improve trigger accuracy
+Code governance is a system that captures, enforces, and evolves your team's coding standards. It's not a linter, not a style guide doc, and not a one-time review. It's a living process that scales with the team — one that externalises the institutional knowledge that usually lives only inside senior engineers' heads.
 
 ---
 
-## What's inside
+## The AI code review gap
 
-Three built-in sub-agents handle the evaluation pipeline:
-
-| Sub-agent | Role |
-|---|---|
-| **Analyzer** | Examines benchmark results, explains *why* a skill won, suggests improvements |
-| **Comparator** | Blindly compares two outputs without knowing which produced them — avoids bias |
-| **Grader** | Scores each output against pre-defined assertions |
-
-Plus: eval scripts, a JSON schema, a Python benchmark runner, and an **HTML eval viewer** for side-by-side human review.
+Standard linters catch syntax and style, not intent. They can't tell you that a test will be flaky, that a locator strategy is fragile, or that an assertion is too shallow. Human reviewers can catch all of that — but only if they have time. At AI velocity, they don't.
 
 ---
 
-## Installation
+## Qodo
 
-```bash
-npx skills add https://github.com/anthropics/skills --skill skill-creator
+Qodo is an AI Code Review Platform that fills this gap. It combines two things that work together:
+
+**Rules system** — where team coding standards live. Rules can be written manually, but Qodo also discovers them automatically from codebase patterns and PR history. Recurring reviewer comments become candidates for new rules.
+
+**Review agents** — AI reviewers with access to the full codebase (not just the diff), enabling reasoning about architecture, duplication, dependencies, and rule compliance.
+
+Qodo integrates directly into GitHub, GitLab, Bitbucket, and Azure DevOps.
+
+---
+
+## The closed loop
+
+```
+  Codebase patterns          Review agents
+  PR history         →  →  → enforce standards
+        ↑                          |
+        |                          ↓
+  Rules evolve   ←  ←  ←   Recurring comments
+                            suggest new rules
 ```
 
-Choose your agent client target (`.agents/` for Cursor/Copilot). Symlink is recommended — a single source of truth that picks up updates automatically.
+Rules feed the review. Review data feeds the rules. The result is a standards system that gets smarter over time without constant manual maintenance.
 
 ---
 
-## How evals work
+## What Qodo catches in Playwright test code
 
-Each test case has:
-- An **input prompt** — the trigger query
-- **Assertions** — what the output must include or exclude
-
-The benchmark runs both variants in parallel. Results appear in the HTML eval viewer with pass/fail per assertion and an overall score per test case.
-
-Example results from evaluating `find-missing-testids`:
-
-| Eval | With Skill | Without Skill |
-|---|---|---|
-| Generic scan | 71% (5/7) | 100% (7/7) |
-| Test automation request | 100% (5/5) | 100% (5/5) |
-| Testability audit | 100% (5/5) | 100% (5/5) |
-
-A result like the Generic scan row — where the skill underperforms — is valuable information. It tells you the skill is over-constraining the model for that input type, or that the trigger condition is too broad. Evals surface this before it becomes a production problem.
+- **Flakiness risks** — `waitForTimeout`, time-dependent assertions
+- **Fragile selectors** — class or ID-based locators that break on markup changes
+- **Missing assertions** — tests that navigate but don't assert meaningful state
+- **Convention violations** — any pattern defined as a team rule
+- **Duplication** — test logic that already exists in a page object or fixture (only catchable with full codebase context)
 
 ---
 
-## The description optimization loop
+## Practical Playwright rules to define
 
-The `description` field in a `SKILL.md` is what the agent uses to decide whether to invoke the skill. A vague or too-narrow description causes missed invocations — or false triggers.
-
-The optimization loop:
-1. Generates 20 trigger / non-trigger queries
-2. Displays them in the HTML viewer for human review and editing
-3. Iterates the description up to 5 rounds, measuring accuracy each round
-
-The result is a description that has been empirically validated, not just written by intuition.
+| Rule | Why it matters |
+|---|---|
+| Prefer `getByRole`, `getByLabel`, `getByTestId` | Resilient to markup changes |
+| No `waitForTimeout` | Replace with semantic waits (`waitForSelector`, `waitForResponse`) |
+| Assertions must verify content, not just URL | URL checks don't prove the page rendered correctly |
+| Selectors live in page objects, not inline | Enforces page object model consistency |
+| Flag tests that share state or depend on order | Prevents intermittent failures from test coupling |
 
 ---
 
-## Key takeaway
+## The shift
 
-Skills are becoming part of your automation infrastructure. Apply the same rigour you apply to test code: baselines, assertions, regression checks. A benchmarked skill is a reliable part of your pipeline. An untested one is a one-off hack.
+| Before | After |
+|---|---|
+| Standards live in docs and people's heads | Standards live in Qodo's rules portal |
+| Inconsistent review depending on who reviews | Every PR gets the same review |
+| Senior engineers review boilerplate | Senior engineers review architecture |
+| Flaky tests slip through | Flakiness patterns flagged before merge |
+
+The goal is not to replace human reviewers — it's to change what they spend time on. Qodo handles the systematic, automatable review. Humans focus on what requires judgement: architecture, edge case coverage, test strategy.
