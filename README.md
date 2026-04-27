@@ -60,14 +60,14 @@ The workshop is split into chapters. Each chapter is a git branch that builds on
 
 | # | Chapter | Branch | What you'll learn |
 |---|---------|--------|-------------------|
-| 1 | Cursor Basics | `chapter/01-cursor-basics` | Navigate Cursor IDE, write your first AI-assisted tests |
-| 2 | Claude Code | `chapter/02-claude-code` | Craft effective prompts for test generation |
-| 3 | Rules | `chapter/03-rules` | Configure project rules and create reusable AI skills |
-| 4 | Skills | `chapter/04-skills` | Configure project rules and create reusable AI skills |
-| 5 | Context Engineering | `chapter/05-context-engineering` | Optimize context with docs, examples, and references |
-| 6 | Workflow Building | `chapter/06-workflow-building` | Build end-to-end testing workflows |
-| 7 | Skills evaluation | `chapter/07-skills-evaluation` | Test create and evaluate skills |
-| 8 | AI code governance | `chapter/08-ai-code-governance` | Use AI to review and improve test quality |
+| 1 | Cursor Basics | `chapter/01-cursor-basics` | Use Cursor's chat, tab completion, and inline edits to write Playwright tests with proper selectors |
+| 2 | Claude Code | `chapter/02-claude-code` | Use Claude Code as an agentic CLI to generate tests, debug failures, and work across entire projects |
+| 3 | Rules | `chapter/03-rules` | Create and organize CLAUDE.md rules with different trigger types to guide AI agent behavior |
+| 4 | Skills | `chapter/04-skills` | Build reusable skills with SKILL.md, add supporting scripts, and use the skills registry |
+| 5 | Context Engineering | `chapter/05-context-engineering` | Manage context windows effectively and keep conversations focused for best model performance |
+| 6 | Workflow Building | `chapter/06-workflow-building` | Orchestrate agents with forked subagents and scoped MCP servers to automate complex workflows |
+| 7 | Skills evaluation | `chapter/07-skills-evaluation` | Benchmark and optimize skills using eval frameworks, test cases, and parallel comparisons |
+| 8 | AI code governance | `chapter/08-ai-code-governance` | Enforce team coding standards on PRs using AI-powered code review with rules and context-aware agents |
 
 ### Switching chapters
 
