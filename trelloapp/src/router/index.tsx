@@ -4,6 +4,7 @@ import BoardList from '@/components/boardList/BoardList';
 import Login from '@/components/Login';
 import Signup from '@/components/Signup';
 import Pricing from '@/components/Pricing';
+import Settings from '@/components/Settings';
 import Board from '@/views/Board';
 import NotFound from '@/components/NotFound';
 
@@ -14,6 +15,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/settings" element={<Settings />} />
       <Route path="/board/:board" element={<Board />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
